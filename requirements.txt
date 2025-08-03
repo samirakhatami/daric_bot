@@ -1,0 +1,10 @@
+python==3.12
+pyrogram
+python-telegram-bot
+psutil
+requests
+jdatetime
+
+django
+django-unfold
+django-jalali
