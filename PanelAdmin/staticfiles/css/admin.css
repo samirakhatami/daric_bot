@@ -1,0 +1,74 @@
+button[name="index"] {
+    display: block !important;
+}
+
+/* تنظیم جهت کلی به RTL */
+/* body {
+    direction: rtl;
+}
+
+/* تنظیم المان والد */
+/* .flex {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+} */ 
+span[class="tracking-tight"] {
+    display: none;
+}
+span[class="block bg-base-200 h-5 mx-3 w-px dark:bg-base-700"]{
+    display: none;
+}
+/* تنظیم منوی تم */
+div[class="relative"][x-data="{ openTheme: false }"] nav {
+    position: absolute !important;
+    right: auto !important; /* حذف تنظیم پیش‌فرض -right-2 */
+    left: 0 !important; /* شروع از سمت چپ دکمه */
+    top: 100%; /* نمایش زیر دکمه */
+    width: 150px; /* عرض مناسب */
+    min-width: 0;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    /* display: block !important; مطمئن می‌شه که پنهان نشه */
+}
+
+/* تنظیم منوی کاربر */
+div[class="relative"][x-data="{ openUserLinks: false }"] nav {
+    position: absolute !important;
+    right: auto !important;
+    left: 0 !important;
+    top: 100%; /* نمایش زیر دکمه */
+    width: 200px; /* عرض مناسب */
+    min-width: 0;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    /* display: block !important; مطمئن می‌شه که پنهان نشه */
+}
+
+/* تنظیم برای اندازه‌های مختلف صفحه */
+/* @media (max-width: 768px) {
+    div[class="relative"] nav {
+        width: 200% !important;
+        left: 0 !important;
+    }
+} */
+
+/* @media (max-width: 960px) {
+    div[class="relative"] nav {
+        width: 200% !important;
+        left: 0 !important;
+    }
+} */
+
+/* @media (max-width: 1200px) {
+    div[class="relative"] nav {
+        width: 200% !important;
+        left: 0 !important;
+    }
+} */
+
+
+

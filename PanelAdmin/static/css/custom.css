@@ -1,0 +1,23 @@
+.sidebar {
+    position: fixed;
+    right: 0;
+    top: 56px;
+    width: 250px;
+    background: #f8f9fa;
+    padding: 15px;
+    height: calc(100% - 56px);
+}
+
+.nav-link {
+    color: #333;
+    padding: 10px;
+    display: block;
+}
+
+.nav-link:hover {
+    background: #e9ecef;
+}
+
+.navbar-nav .nav-item {
+    margin-left: 10px;
+}

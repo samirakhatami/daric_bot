@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load i18n unfold %}
+{% load static %}
+
+{% block content %}
+<h2 style="font-size: 20px; font-weight: bold;">به پنل مدیریت ربات داریک خوش‌آمدید</h2>
+<br><br>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+  <div class="rounded-2xl border border-border bg-background p-4 shadow-sm">
+    <div class="text-sm text-muted-foreground mb-1">تعداد اعضای ربات</div>
+    <div class="text-2xl font-bold">{{ bot_count }}</div>
+  </div>
+  <div class="rounded-2xl border border-border bg-background p-4 shadow-sm">
+    <div class="text-sm text-muted-foreground mb-1">کاربران مایل به دریافت قیمت ها</div>
+    <div class="text-2xl font-bold">{{ frame_count }}</div>
+  </div>
+  <div class="rounded-2xl border border-border bg-background p-4 shadow-sm">
+    <div class="text-sm text-muted-foreground mb-1">کاربران مایل به دریافت تحلیل ها</div>
+    <div class="text-2xl font-bold">{{ analysis_count }}</div>
+  </div>
+</div>
+<script>
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      const searchInput = document.querySelector('input[id="searchbar"]');
+      if (searchInput) {
+        searchInput.placeholder = "جستجو...";
+      }
+    }, 1500); // صبر برای لود کامل DOM
+  });
+</script>
+{% endblock %}
+

@@ -1,0 +1,4 @@
+.result thead th,
+.result tbody td {
+    text-align: right;
+}
