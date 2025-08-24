@@ -541,13 +541,15 @@ async def button_inline(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for time_zone in times_zone:
         time_zone = time_zone[0]       
         if query.data == time_zone:
+            time_wanted_name = []
             cr.execute("SELECT time_frame_id FROM frame_member WHERE chat_id = %s", (user.id,))
             time_wnated_id = cr.fetchone()
             if time_wnated_id:
                 time_wnated_id = time_wnated_id[0]
                 cr.execute("SELECT title FROM time_frame WHERE id = %s", (time_wnated_id,))
                 time_wnated_name = cr.fetchone()
-                time_wnated_name = time_wnated_name[0]
+                if time_wanted_name:
+                    time_wnated_name = time_wnated_name[0]
 
             sql = "SELECT id FROM time_frame WHERE title = %s"
             cr.execute(sql, (time_zone,))
@@ -645,4 +647,5 @@ if __name__ == "__main__":
     # nest_asyncio.apply()
     # asyncio.get_event_loop().run_until_complete(main())
     main()
+
 
