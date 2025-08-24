@@ -208,17 +208,17 @@ async def button_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         cr.execute("SELECT currency_id FROM frame_member WHERE chat_id = %s", (user.id,))
         cvl = cr.fetchall()
         currency_list = []
-        
+        cvl_name = []
         for currency_want in cvl:
             currency_list.append(currency_want[0])
-        cvl_id_list = str(currency_list[0]).split(",")
-        cvl_name = []
-        for cvl_id in cvl_id_list:
-            cr.execute("SELECT title FROM currency WHERE id = %s", (cvl_id,))
-            n = cr.fetchone()
-            if n:
-                n = n[0]
-                cvl_name.append(n)
+        if currency_list:
+            cvl_id_list = str(currency_list[0]).split(",")
+            for cvl_id in cvl_id_list:
+                cr.execute("SELECT title FROM currency WHERE id = %s", (cvl_id,))
+                n = cr.fetchone()
+                if n:
+                    n = n[0]
+                    cvl_name.append(n)
         
         cr.execute("SELECT title FROM currency WHERE state = 1")
         currencies = cr.fetchall()
@@ -630,8 +630,6 @@ def main():
         token = cr.fetchone()
         
         app = ApplicationBuilder().token(token[0]).build()
-        app.initialize()
-        app.start()
         app.add_handler(CommandHandler("start", start))
         app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, button_outline))
         app.add_handler(CallbackQueryHandler(button_inline))
@@ -647,3 +645,4 @@ if __name__ == "__main__":
     # nest_asyncio.apply()
     # asyncio.get_event_loop().run_until_complete(main())
     main()
+
