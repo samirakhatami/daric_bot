@@ -259,7 +259,11 @@ async def button_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for item in data:
                 bestBuy = f"{int(item["bestBuy"]):,}"
                 bestSell = f"{int(item["bestSell"]):,}"
-                text = text + f"""📊*{item["destinationCoinNameFa"]}*
+                if item["destinationCoinNameFa"] == "طلا":
+                    name = "طلا 18 عیار"
+                elif item["destinationCoinNameFa"] == "نقره":
+                    name = "نقره 995 عیار"
+                text = text + f"""📊*{name}*
     🟢خرید: {bestBuy} تومان
     🔴فروش: {bestSell} تومان\n\n"""
             url = "https://apie-stage.daricgold.com/public/general/GetGoldPrice"    
@@ -648,6 +652,7 @@ if __name__ == "__main__":
     # nest_asyncio.apply()
     # asyncio.get_event_loop().run_until_complete(main())
     main()
+
 
 
 
