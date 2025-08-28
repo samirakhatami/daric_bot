@@ -101,7 +101,7 @@ async def send_costs(context: ContextTypes.DEFAULT_TYPE):
         if currency == 'نقره 995 عیار':
             currency = 'نقره'
         currency_list.append(currency)
-    url = "https://apie-stage.daricgold.com/public/general/GetGoldPrice"
+    url = "https://apie.daric.gold/public/general/GetGoldPrice"
     response = requests.get(url)
     data = response.json()
     result = []
@@ -158,22 +158,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             username = user.first_name
         else: 
             username = None
-        sql_query = "SELECT chat_id FROM bot_member"
-        cr.execute(sql_query)
-        chat_ids = cr.fetchall()
-        for id in chat_ids:
-            id = id[0]
-            if id == str(chat_id):
-                is_first = False
-            else:
-                is_first = True
-        if is_first == True:
-            value = ("17",chat_id, username)
-            sql_query = "INSERT INTO bot_member (bot_id, chat_id, name) VALUES (%s,%s, %s)"
+        
+        sql_query = "SELECT 1 FROM bot_member WHERE chat_id = %s"
+        cr.execute(sql_query, (chat_id,))
+        exists = cr.fetchone()
+        if not exists:
+            sql_query = "INSERT INTO bot_member (bot_id, chat_id, name) VALUES (%s, %s, %s)"
+            value = ("17", chat_id, username)
             cr.execute(sql_query, value)
             db.commit()
-            db.close
-        
+            
         cr.execute("SELECT chat_id FROM frame_member")
         chat_ids = cr.fetchall()        
         id_list = []
@@ -251,7 +245,7 @@ async def button_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("لطفا گزینه‌های مورد نظر خود را انتخاب کنید (چند انتخابی): ", reply_markup= reply_markup)
     elif text == "قیمت لحظه ای":
         try: 
-            url =  "https://apie-stage.daricgold.com/api/Dashboard/PairList?src=TMN"
+            url =  "https://apie.daric.gold/api/Dashboard/PairList?src=TMN"
             response = requests.get(url)
             print(response.status_code)
             data = response.json()
@@ -266,7 +260,7 @@ async def button_outline(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 text = text + f"""📊*{name}*
     🟢خرید: {bestBuy} تومان
     🔴فروش: {bestSell} تومان\n\n"""
-            url = "https://apie-stage.daricgold.com/public/general/GetGoldPrice"    
+            url = "https://apie.daric.gold/public/general/GetGoldPrice"    
             response = requests.get(url)
             data = response.json()
             for item in data:
@@ -394,10 +388,26 @@ async def button_inline(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query.data == "disable_send_price":
         cr.execute("UPDATE frame_member SET state = %s WHERE chat_id = %s", ("0", user.id))
         db.commit()
+        for job in context.job_queue.jobs():
+            job.schedule_removal()
         await context.bot.sendMessage(chat_id=user.id, text="درخواست شما با موفقیت انجام شد ✅")
     if query.data == "Activate_send_prica":
         cr.execute("UPDATE frame_member SET state = %s WHERE chat_id = %s", ("1", user.id))
         db.commit()
+        cr.execute("SELECT chat_id FROM frame_member")
+        chat_ids = cr.fetchall()        
+        id_list = []
+        for chat_id in chat_ids:
+                id_list.append(chat_id[0])
+            
+        id_list = [str(i).strip() for i in id_list]
+        if str(user.id) in id_list:
+            cr.execute("SELECT state FROM frame_member WHERE chat_id = %s", (user.id,))
+            state = cr.fetchone()
+            if state[0] == "1":
+                id = user.id
+                time_zone, currency_name = get_timed_message_info(id)
+                create_job_queue(context, update.effective_chat.id, currency_name, time_zone)
         await context.bot.sendMessage(chat_id=user.id, text="درخواست شما با موفقیت انجام شد ✅")
     if query.data == "send_price_setting":
         cr.execute("SELECT chat_id FROM frame_member")
@@ -652,6 +662,7 @@ if __name__ == "__main__":
     # nest_asyncio.apply()
     # asyncio.get_event_loop().run_until_complete(main())
     main()
+
 
 
 
