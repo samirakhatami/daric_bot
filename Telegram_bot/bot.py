@@ -180,6 +180,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             state = cr.fetchone()
             if state[0] == "1":
                 id = user.id
+                for job in context.job_queue.jobs():
+                    job.schedule_removal()
                 time_zone, currency_name = get_timed_message_info(id)
                 create_job_queue(context, update.effective_chat.id, currency_name, time_zone)
             
@@ -392,6 +394,8 @@ async def button_inline(update: Update, context: ContextTypes.DEFAULT_TYPE):
             job.schedule_removal()
         await context.bot.sendMessage(chat_id=user.id, text="درخواست شما با موفقیت انجام شد ✅")
     if query.data == "Activate_send_prica":
+        for job in context.job_queue.jobs():
+            job.schedule_removal()
         cr.execute("UPDATE frame_member SET state = %s WHERE chat_id = %s", ("1", user.id))
         db.commit()
         cr.execute("SELECT chat_id FROM frame_member")
@@ -629,6 +633,8 @@ async def button_inline(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 cr.execute("SELECT state FROM frame_member WHERE chat_id = %s", (user.id,))
                 state = cr.fetchone()
                 if state[0] == "1":
+                    for job in context.job_queue.jobs():
+                        job.schedule_removal()
                     time_zone, currency_name = get_timed_message_info(user.id) 
                     create_job_queue(context, update.effective_chat.id, currency_name, time_zone)
             except Exception as e :
@@ -662,6 +668,7 @@ if __name__ == "__main__":
     # nest_asyncio.apply()
     # asyncio.get_event_loop().run_until_complete(main())
     main()
+
 
 
 
